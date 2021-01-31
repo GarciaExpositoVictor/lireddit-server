@@ -4,12 +4,7 @@ import { Post } from "./entities/Posts";
 import microConfig from "./mikro-orm.config";
 
 const main = async () => {
-    const orm = await MikroORM.init({
-        dbName: 'lireddit',
-        debug: !__prod__,
-        type: 'postgresql' as const,
-        entities: [Post]
-    } );
+    const orm = await MikroORM.init(microConfig);
 
     const post = orm.em.create(Post, {title: "first post xd"});
     await orm.em.persistAndFlush(post);
