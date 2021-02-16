@@ -1,1 +1,11 @@
 node_modules
+dist/
+dist/index.js
+dist/index.js
+dist/index.js.map
+dist/mikro-orm.config.js
+dist/mikro-orm.config.js.map
+dist/entities/constants.js
+dist/entities/constants.js.map
+dist/entities/Posts.js
+dist/entities/Posts.js.map
