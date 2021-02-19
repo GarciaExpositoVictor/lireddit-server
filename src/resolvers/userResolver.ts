@@ -1,6 +1,6 @@
 import { User } from '../entities/user';
 import { MyContext } from '../types';
-import { Arg, Ctx, Mutation, Resolver } from 'type-graphql';
+import { Arg, Ctx, Mutation, Query, Resolver } from 'type-graphql';
 import argon2 from 'argon2';
 import { UsernamePasswordInput } from '../models/usernamePasswordInput';
 import { logger } from '../constants';
@@ -10,6 +10,14 @@ import { EntityManager } from '@mikro-orm/core';
 
 @Resolver()
 export class UserResolver {
+  @Query(() => User, { nullable: true })
+  async me(@Ctx() { em, req }: MyContext): Promise<User | null> {
+    if (!req.session.userId) {
+      return null;
+    }
+    return em.findOne(User, { id: req.session.userId });
+  }
+
   @Mutation(() => UserResponse, { nullable: true })
   async register(
     @Arg('options') options: UsernamePasswordInput,
@@ -40,7 +48,7 @@ export class UserResolver {
   @Mutation(() => UserResponse)
   async login(
     @Arg('options') options: UsernamePasswordInput,
-    @Ctx() { em }: MyContext
+    @Ctx() { em, req }: MyContext
   ): Promise<UserResponse> {
     try {
       const userFound = await em.findOne(User, { username: options.username });
@@ -65,6 +73,9 @@ export class UserResolver {
           ]
         };
       }
+
+      req.session.userId = userFound.id;
+
       return {
         user: userFound
       };
