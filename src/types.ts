@@ -1,6 +1,6 @@
-import { EntityManager } from '@mikro-orm/core';
 import { Request, Response } from 'express';
 import 'express-session';
+import { Redis } from 'ioredis';
 
 declare module 'express-session' {
   interface SessionData {
@@ -9,7 +9,7 @@ declare module 'express-session' {
 }
 
 export type MyContext = {
-  em: EntityManager;
   req: Request;
   res: Response;
+  redis: Redis;
 };
