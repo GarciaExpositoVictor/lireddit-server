@@ -14,6 +14,7 @@ import cors from 'cors';
 import { createConnection } from 'typeorm';
 import { Post } from './entities/post';
 import { User } from './entities/user';
+import path from 'path';
 
 const main = async () => {
   await createConnection({
@@ -23,6 +24,7 @@ const main = async () => {
     password: 'postgres',
     logging: true,
     synchronize: true,
+    migrations: [path.join(__dirname, './migrations/*')],
     entities: [Post, User]
   });
 
