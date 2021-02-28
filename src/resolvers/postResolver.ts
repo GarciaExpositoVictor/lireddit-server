@@ -97,4 +97,31 @@ export class PostResolver {
     await Post.delete(id);
     return true;
   }
+
+  @Mutation(() => Boolean)
+  @UseMiddleware(isAuth)
+  async vote(
+    @Arg('postId', () => Int) postId: number,
+    @Ctx() { req }: MyContext,
+    @Arg('vote', () => Int) vote: number
+  ) {
+    const isPositive = vote !== -1;
+    const value = isPositive ? 1 : -1;
+    const { userId } = req.session;
+
+    await getConnection().query(
+      `
+    START TRANSACTION;
+
+    insert into "updoot" ("userId", "postId", value)
+    values (${userId},${postId},${value});
+
+    update post
+    set points = points + ${value}
+    where id = ${postId};
+
+    COMMIT;
+    `);
+    return true;
+  }
 }

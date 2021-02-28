@@ -15,6 +15,7 @@ import { createConnection } from 'typeorm';
 import { Post } from './entities/post';
 import { User } from './entities/user';
 import path from 'path';
+import { UpDoot } from './entities/updoot';
 
 const main = async () => {
   await createConnection({
@@ -25,7 +26,7 @@ const main = async () => {
     logging: true,
     synchronize: true,
     migrations: [path.join(__dirname, './migrations/*')],
-    entities: [Post, User]
+    entities: [Post, User, UpDoot]
   });
 
   const app = express();
