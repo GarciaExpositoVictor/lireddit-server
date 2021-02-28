@@ -1,6 +1,14 @@
 import { User } from '../entities/user';
 import { MyContext } from '../types';
-import { Arg, Ctx, Mutation, Query, Resolver } from 'type-graphql';
+import {
+  Arg,
+  Ctx,
+  FieldResolver,
+  Mutation,
+  Query,
+  Resolver,
+  Root
+} from 'type-graphql';
 import argon2 from 'argon2';
 import { UsernamePasswordInput } from '../models/usernamePasswordInput';
 import {
@@ -14,8 +22,16 @@ import { FieldError } from 'src/models/fieldError';
 import { sendEmail } from '../utils/mailer';
 import { v4 as uuid } from 'uuid';
 
-@Resolver()
+@Resolver(User)
 export class UserResolver {
+  @FieldResolver(() => String)
+  email(@Root() user: User, @Ctx() { req }: MyContext) {
+    if (req.session.userId === user.id) {
+      return user.email;
+    }
+    return '';
+  }
+
   @Mutation(() => UserResponse)
   async changePassword(
     @Arg('token') token: string,
