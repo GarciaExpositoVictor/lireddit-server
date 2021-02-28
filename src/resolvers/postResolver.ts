@@ -14,6 +14,7 @@ import { PostInput } from '../models/postInput';
 import { MyContext } from '../types';
 import { isAuth } from '../middleware/isAuth';
 import { getConnection } from 'typeorm';
+import { PaginatedPosts } from '../models/paginatedPosts';
 
 @Resolver(Post)
 export class PostResolver {
@@ -22,24 +23,28 @@ export class PostResolver {
     return root.text.slice(0, 50);
   }
 
-  @Query(() => [Post])
-  posts(
+  @Query(() => PaginatedPosts)
+  async posts(
     @Arg('limit', () => Int) limit: number,
     @Arg('cursor', () => String, { nullable: true }) cursor: string | null
-  ): Promise<Post[]> {
+  ): Promise<PaginatedPosts> {
     const realLimit = Math.min(50, limit);
-    const queryBuilder = getConnection()
+    const fetchingLimit = realLimit + 1;
+
+    const qb = getConnection()
       .getRepository(Post)
       .createQueryBuilder('p')
       .orderBy('"createdAt"', 'DESC')
-      .take(realLimit);
+      .take(fetchingLimit);
 
     if (cursor) {
-      queryBuilder.where('"createdAt" < :cursor', {
-        cursor: new Date(parseInt(cursor, 10))
-      });
+      qb.where('"createdAt" < :cursor', { cursor: new Date(parseInt(cursor, 10)) });
     }
-    return queryBuilder.getMany();
+
+    const posts = await qb.getMany();
+
+    const hasMore = posts.length === fetchingLimit;
+    return { posts: posts.slice(0, realLimit), hasMore };
   }
 
   @Query(() => Post, { nullable: true })
