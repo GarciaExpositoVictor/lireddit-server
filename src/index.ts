@@ -16,6 +16,8 @@ import { Post } from './entities/post';
 import { User } from './entities/user';
 import path from 'path';
 import { UpDoot } from './entities/updoot';
+import { createUserLoader } from './utils/createUserLoader';
+import { createUpdootLoader } from './utils/createUpdootLoader';
 
 const main = async () => {
   await createConnection({
@@ -68,7 +70,9 @@ const main = async () => {
     context: ({ req, res }): MyContext => ({
       req,
       res,
-      redis
+      redis,
+      userLoader: createUserLoader(),
+      updootLoader: createUpdootLoader()
     })
   });
 
