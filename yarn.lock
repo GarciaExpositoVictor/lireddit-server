@@ -822,7 +822,7 @@
   "resolved" "https://registry.npmjs.org/ci-info/-/ci-info-2.0.0.tgz"
   "version" "2.0.0"
 
-"class-validator@>=0.12.0":
+"class-validator@^0.13.1", "class-validator@>=0.12.0":
   "integrity" "sha512-zWIeYFhUitvAHBwNhDdCRK09hWx+P0HUwFE8US8/CxFpMVzkUK8RJl7yOIE+BVu2lxyPNgeOaFv78tLE47jBIg=="
   "resolved" "https://registry.npmjs.org/class-validator/-/class-validator-0.13.1.tgz"
   "version" "0.13.1"
@@ -1106,6 +1106,13 @@
   dependencies:
     "is-obj" "^2.0.0"
 
+"dotenv-safe@^8.2.0":
+  "integrity" "sha512-uWwWWdUQkSs5a3mySDB22UtNwyEYi0JtEQu+vDzIqr9OjbDdC2Ip13PnSpi/fctqlYmzkxCeabiyCAOROuAIaA=="
+  "resolved" "https://registry.npmjs.org/dotenv-safe/-/dotenv-safe-8.2.0.tgz"
+  "version" "8.2.0"
+  dependencies:
+    "dotenv" "^8.2.0"
+
 "dotenv@^8.2.0":
   "integrity" "sha512-8sJ78ElpbDJBHNeBzUbUVLsqKdccaa/BXF1uPTw3GrvQTBgrQrtObr2mUrE38vzYd8cEv+m/JBfDLioYcfXoaw=="
   "resolved" "https://registry.npmjs.org/dotenv/-/dotenv-8.2.0.tgz"
@@ -1367,6 +1374,14 @@
     "string-width" "^1.0.1"
     "strip-ansi" "^3.0.1"
     "wide-align" "^1.1.0"
+
+"gen-env-types@^1.2.0":
+  "integrity" "sha512-cimxHSZwPXDoMCftkvCx0H9sh41CN5D8bG15jXPlCh7b81Z3ERsb7M2lxtj2aq21BMYsKX3NYFBXFNu/2mM6AA=="
+  "resolved" "https://registry.npmjs.org/gen-env-types/-/gen-env-types-1.2.0.tgz"
+  "version" "1.2.0"
+  dependencies:
+    "chalk" "^4.0.0"
+    "dotenv" "^8.2.0"
 
 "get-caller-file@^2.0.5":
   "integrity" "sha512-DyFP3BM/3YHTQOCUL/w0OZHR0lpKeGrxotcHWcqNEdnltqFwXVfhEBQ94eIo34AfQpo0rGki4cyIiftY06h2Fg=="

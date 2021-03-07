@@ -18,27 +18,29 @@ import path from 'path';
 import { UpDoot } from './entities/updoot';
 import { createUserLoader } from './utils/createUserLoader';
 import { createUpdootLoader } from './utils/createUpdootLoader';
+import 'dotenv-safe/config';
 
 const main = async () => {
-  await createConnection({
+  const conn = await createConnection({
     type: 'postgres',
-    database: 'lireddit2',
-    username: 'postgres',
-    password: 'postgres',
     logging: true,
-    synchronize: true,
+    url: process.env.DATABASE_URL,
+    //synchronize: true,
     migrations: [path.join(__dirname, './migrations/*')],
     entities: [Post, User, UpDoot]
   });
 
+  conn.runMigrations();
+
   const app = express();
 
   const RedisStore = connectRedis(session);
-  const redis = new Redis();
+  const redis = new Redis(process.env.REDIS_URL);
 
+  app.set('trust proxy', 1);
   app.use(
     cors({
-      origin: 'http://localhost:3000',
+      origin: process.env.CORS_ORIGIN,
       credentials: true
     })
   );
@@ -54,10 +56,11 @@ const main = async () => {
         maxAge: 1000 * 60 * 60 * 24 * 365 * 10, //ten years
         httpOnly: true,
         secure: __prod__,
-        sameSite: 'lax'
+        sameSite: 'lax',
+        domain: __prod__ ? '.codeponder.com' : undefined
       },
       saveUninitialized: false,
-      secret: 'cacecicocu',
+      secret: process.env.SECRET,
       resave: false
     })
   );
@@ -81,7 +84,7 @@ const main = async () => {
     cors: false
   });
 
-  app.listen(4000, () => {
+  app.listen(parseInt(process.env.PORT, 10), () => {
     if (__prod__) {
       logger.debug('app started');
     }
